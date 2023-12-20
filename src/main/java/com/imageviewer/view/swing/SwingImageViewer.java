@@ -21,4 +21,8 @@ public class SwingImageViewer extends JFrame {
         this.imageDisplay = display;
         return display;
     }
+
+    public ImageDisplay imageDisplay() {
+        return imageDisplay;
+    }
 }
