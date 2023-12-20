@@ -13,7 +13,6 @@ public class Presenter {
         this.image = image;
         this.imageDisplay = imageDisplay;
 
-        //this.imageDisplay.on((Dragged) offset -> dragged(offset));
         this.imageDisplay.on((Dragged) this::dragged);
         this.imageDisplay.on((Released) this::released);
         this.imageDisplay.paint(image.url(), 0);
@@ -29,15 +28,15 @@ public class Presenter {
 
     private void dragged(int offset) {
         imageDisplay.clear();
-        image = goingToRight(offset) ? image.next() : image.prev();
-        imageDisplay.paint(image.url(), goingToRight(offset) ? imageDisplay.width(): - imageDisplay.width());
+        Image newImage = goingToRight(offset) ? image.next() : image.prev();
+        imageDisplay.paint(image.url(), offset);
+        imageDisplay.paint(newImage.url(), goingToRight(offset) ? imageDisplay.width() + offset : offset - imageDisplay.width());
     }
 
     private static boolean goingToRight(int offset) {
-        return offset > 0;
+        return offset < 0;
     }
 
-    private boolean shouldChangeWith(int offset) {
-        return offset > imageDisplay.width() / 2;
+    private boolean shouldChangeWith(int offset) { return Math.abs(offset) > imageDisplay.width() / 2;
     }
 }
