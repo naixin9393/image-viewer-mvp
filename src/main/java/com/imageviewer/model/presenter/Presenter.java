@@ -2,6 +2,8 @@ package com.imageviewer.model.presenter;
 
 import com.imageviewer.model.Image;
 import com.imageviewer.model.ImageDisplay;
+import com.imageviewer.model.ImageDisplay.Released;
+import com.imageviewer.model.ImageDisplay.Dragged;
 
 public class Presenter {
     private Image image;
@@ -11,9 +13,10 @@ public class Presenter {
         this.image = image;
         this.imageDisplay = imageDisplay;
 
-        this.imageDisplay.on((ImageDisplay.Dragged) this::dragged);
-        this.imageDisplay.on((ImageDisplay.Released) this::released);
-
+        //this.imageDisplay.on((Dragged) offset -> dragged(offset));
+        this.imageDisplay.on((Dragged) this::dragged);
+        this.imageDisplay.on((Released) this::released);
+        this.imageDisplay.paint(image.url(), 0);
     }
 
     private void released(int offset) {
