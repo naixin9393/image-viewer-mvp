@@ -1,4 +1,4 @@
-package com.imageviewer.model.presenter;
+package com.imageviewer.presenter;
 
 import com.imageviewer.model.Image;
 import com.imageviewer.model.ImageDisplay;
