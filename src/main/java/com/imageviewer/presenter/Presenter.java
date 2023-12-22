@@ -34,7 +34,7 @@ public class Presenter {
     }
 
     private static boolean goingToRight(int offset) {
-        return offset < 0;
+        return offset > 0;
     }
 
     private boolean shouldChangeWith(int offset) { return Math.abs(offset) > imageDisplay.width() / 2;

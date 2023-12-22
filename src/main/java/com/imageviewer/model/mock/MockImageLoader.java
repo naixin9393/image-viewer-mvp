@@ -6,9 +6,9 @@ import com.imageviewer.model.ImageLoader;
 public class MockImageLoader implements ImageLoader {
     private final String[] imagesUrl = {
             "RED",
+            "GREEN",
             "BLUE",
             "YELLOW",
-            "GREEN",
             "ORANGE"
     };
 

@@ -32,7 +32,8 @@ public class FXImageViewer extends Application {
     }
 
     private Scene createPrimaryScene() {
-        this.primaryScene = new Scene(createPrimaryLayout());
+        this.primaryScene = new Scene( new VBox(), 800, 600);
+        this.primaryScene.setRoot(createPrimaryLayout());
         return primaryScene;
     }
 
@@ -43,7 +44,7 @@ public class FXImageViewer extends Application {
     }
 
     private Node createImageDisplay() {
-        this.imageDisplay = new FXImageDisplay();
+        this.imageDisplay = new FXImageDisplay(primaryScene);
         return imageDisplay;
     }
 }
