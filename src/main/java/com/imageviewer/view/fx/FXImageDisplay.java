@@ -12,18 +12,22 @@ public class FXImageDisplay extends ImageView implements ImageDisplay {
     private Released released;
     private Dragged dragged;
     private double startDragX;
+    private final WritableImage writableImage;
 
     public FXImageDisplay(Scene scene) {
         this.scene = scene;
+        this.writableImage = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
         this.setMouseEventHandlers();
     }
 
     private void setMouseEventHandlers() {
         this.setOnMousePressed(event -> startDragX = event.getX());
         this.setOnMouseReleased(event ->
-            released.at((int) (startDragX  - event.getX()))
+            released.at((int) (event.getX() - startDragX))
         );
-
+        this.setOnMouseDragged(event ->
+            dragged.to((int) (event.getX() - startDragX))
+        );
     }
 
     @Override
@@ -37,14 +41,13 @@ public class FXImageDisplay extends ImageView implements ImageDisplay {
 
     @Override
     public void paint(String image, int offset) {
-        WritableImage writableImage = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
-        fillWith(writableImage, image);
+        fillWith(writableImage, image, offset);
         this.setImage(writableImage);
     }
 
-    private void fillWith(WritableImage writableImage, String color) {
+    private void fillWith(WritableImage writableImage, String color, int offset) {
         PixelWriter pixelWriter = writableImage.getPixelWriter();
-        for (int i = 0; i < scene.getWidth(); i++) {
+        for (int i = Math.max(offset, 0); i < Math.min(scene.getWidth() + offset, scene.getWidth()); i++) {
             for (int j = 0; j < scene.getHeight(); j++) {
                 pixelWriter.setColor(i, j, Color.valueOf(color));
             }
