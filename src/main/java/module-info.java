@@ -5,4 +5,5 @@ module image.viewer {
     exports com.imageviewer.view.fx;
     exports com.imageviewer.model;
     exports com.imageviewer.presenter;
+    exports com.imageviewer.controller.command;
 }

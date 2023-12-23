@@ -35,7 +35,7 @@ public class FileImageLoader implements ImageLoader {
 
     private Image searchFile(File originalFile) {
         for (int i = 0; i < images.length; i++) {
-            if (images[i].endsWith(originalFile.getName()))
+            if (images[i].equals(originalFile.getAbsolutePath()))
                 return imageAt(i);
         }
         throw new RuntimeException("File not found");
@@ -51,12 +51,12 @@ public class FileImageLoader implements ImageLoader {
 
             @Override
             public Image next() {
-                return i + 1 == images.length ? null : imageAt(i + 1);
+                return imageAt((i + 1) % images.length);
             }
 
             @Override
             public Image prev() {
-                return i == 0 ? null : imageAt(i - 1);
+                return imageAt((images.length + i - 1) % images.length);
             }
         };
     }

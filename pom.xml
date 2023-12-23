@@ -33,16 +33,13 @@
     </dependencies>
 
     <build>
-        <directory>
-            ${project.k}/target/classes
-        </directory>
         <plugins>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>software.imageviewer.Main</mainClass>
+                    <mainClass>com.imageviewer.view.fx.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

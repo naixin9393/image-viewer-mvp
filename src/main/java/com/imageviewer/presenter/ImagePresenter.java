@@ -1,21 +1,29 @@
 package com.imageviewer.presenter;
 
+import com.imageviewer.model.FileImageLoader;
 import com.imageviewer.model.Image;
 import com.imageviewer.model.ImageDisplay;
 import com.imageviewer.model.ImageDisplay.Released;
 import com.imageviewer.model.ImageDisplay.Dragged;
 
-public class Presenter {
+import java.io.File;
+
+public class ImagePresenter {
     private Image image;
     private final ImageDisplay imageDisplay;
 
-    public Presenter(Image image, ImageDisplay imageDisplay) {
+    public ImagePresenter(Image image, ImageDisplay imageDisplay) {
         this.image = image;
         this.imageDisplay = imageDisplay;
 
         this.imageDisplay.on((Dragged) this::dragged);
         this.imageDisplay.on((Released) this::released);
+        this.imageDisplay.on(this::changed);
         this.imageDisplay.paint(image.url(), 0);
+    }
+
+    private void changed(String url) {
+        image = new FileImageLoader(new File(url)).load();
     }
 
     private void released(int offset) {

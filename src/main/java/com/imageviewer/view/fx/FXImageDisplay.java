@@ -2,7 +2,6 @@ package com.imageviewer.view.fx;
 
 import com.imageviewer.model.ImageDisplay;
 
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,32 +13,12 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     private final Scene scene;
     private Released released;
     private Dragged dragged;
+    private Changed changed;
     private double startDragX;
 
     public FXImageDisplay(Scene scene) {
         this.scene = scene;
         this.setMouseEventHandlers();
-        this.getChildren().add(createLeftImageView());
-        this.getChildren().add(createCenterImageView());
-        this.getChildren().add(createRightImageView());
-    }
-
-    private Node createCenterImageView() {
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        return imageView;
-    }
-
-    private Node createRightImageView() {
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        return imageView;
-    }
-
-    private Node createLeftImageView() {
-        ImageView imageView = new ImageView();
-        imageView.setPreserveRatio(true);
-        return imageView;
     }
 
     private void setMouseEventHandlers() {
@@ -67,6 +46,7 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
         rescale(imageView, image);
         setLocation(imageView, offset);
         getChildren().add(imageView);
+        if (offset == 0) changed.to(imageUrl);
     }
 
     private void rescale(ImageView imageView, Image image) {
@@ -77,14 +57,15 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
 
     private void setLocation(ImageView imageView, int offset) {
         imageView.setLayoutY(centerY(imageView));
-        imageView.setLayoutX(centerX(imageView, offset));
+        imageView.setLayoutX(setX(imageView, offset));
     }
 
     private double centerY(ImageView imageView) {
         return (scene.getHeight() - imageView.getBoundsInLocal().getHeight()) / 2;
     }
 
-    private double centerX(ImageView imageView, int offset) {
+    private double setX(ImageView imageView, int offset) {
+        System.out.println((scene.getWidth() - imageView.getBoundsInLocal().getWidth()) / 2 + offset);
         return (scene.getWidth() - imageView.getBoundsInLocal().getWidth()) / 2 + offset;
     }
 
@@ -96,5 +77,10 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     @Override
     public void on(Released released) {
         this.released = released;
+    }
+
+    @Override
+    public void on(Changed changed) {
+        this.changed = changed;
     }
 }

@@ -7,6 +7,7 @@ public interface ImageDisplay {
 
     void on(Dragged dragged);
     void on(Released released);
+    void on(Changed changed);
 
     interface Dragged {
         void to(int offset);
@@ -14,5 +15,9 @@ public interface ImageDisplay {
 
     interface Released {
         void at(int offset);
+    }
+
+    interface Changed {
+        void to(String image);
     }
 }
