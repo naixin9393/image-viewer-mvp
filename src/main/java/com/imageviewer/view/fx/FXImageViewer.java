@@ -39,7 +39,10 @@ public class FXImageViewer extends Application {
 
     private Parent createPrimaryLayout() {
         VBox layout = new VBox();
+        layout.setStyle("-fx-background-color: #000000");
         layout.getChildren().add(createImageDisplay());
+        //layout.setAlignment(javafx.geometry.Pos.CENTER);
+        layout.setFillWidth(true);
         return layout;
     }
 

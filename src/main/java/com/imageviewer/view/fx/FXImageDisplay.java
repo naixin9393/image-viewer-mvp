@@ -1,30 +1,50 @@
 package com.imageviewer.view.fx;
 
 import com.imageviewer.model.ImageDisplay;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
-public class FXImageDisplay extends ImageView implements ImageDisplay {
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
+import java.util.Objects;
+
+public class FXImageDisplay extends Pane implements ImageDisplay {
     private final Scene scene;
     private Released released;
     private Dragged dragged;
     private double startDragX;
-    private final WritableImage writableImage;
 
     public FXImageDisplay(Scene scene) {
         this.scene = scene;
-        this.writableImage = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
         this.setMouseEventHandlers();
+        this.getChildren().add(createLeftImageView());
+        this.getChildren().add(createCenterImageView());
+        this.getChildren().add(createRightImageView());
+    }
+
+    private Node createCenterImageView() {
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    private Node createRightImageView() {
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    private Node createLeftImageView() {
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        return imageView;
     }
 
     private void setMouseEventHandlers() {
         this.setOnMousePressed(event -> startDragX = event.getX());
-        this.setOnMouseReleased(event ->
-            released.at((int) (event.getX() - startDragX))
-        );
+        this.setOnMouseReleased(event -> released.at((int) (event.getX() - startDragX)));
         this.setOnMouseDragged(event ->
             dragged.to((int) (event.getX() - startDragX))
         );
@@ -37,21 +57,35 @@ public class FXImageDisplay extends ImageView implements ImageDisplay {
 
     @Override
     public void clear() {
+        this.getChildren().clear();
     }
 
     @Override
-    public void paint(String image, int offset) {
-        fillWith(writableImage, image, offset);
-        this.setImage(writableImage);
+    public void paint(String imageUrl, int offset) {
+        Image image = new Image(Objects.requireNonNull(getClass().getResource(imageUrl)).toExternalForm());
+        ImageView imageView = new ImageView(image);
+        rescale(imageView, image);
+        setLocation(imageView, offset);
+        getChildren().add(imageView);
     }
 
-    private void fillWith(WritableImage writableImage, String color, int offset) {
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
-        for (int i = Math.max(offset, 0); i < Math.min(scene.getWidth() + offset, scene.getWidth()); i++) {
-            for (int j = 0; j < scene.getHeight(); j++) {
-                pixelWriter.setColor(i, j, Color.valueOf(color));
-            }
-        }
+    private void rescale(ImageView imageView, Image image) {
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(Math.min(scene.getHeight(), image.getHeight()));
+        imageView.setFitWidth(Math.min(scene.getWidth(), image.getWidth()));
+    }
+
+    private void setLocation(ImageView imageView, int offset) {
+        imageView.setLayoutY(centerY(imageView));
+        imageView.setLayoutX(centerX(imageView, offset));
+    }
+
+    private double centerY(ImageView imageView) {
+        return (scene.getHeight() - imageView.getBoundsInLocal().getHeight()) / 2;
+    }
+
+    private double centerX(ImageView imageView, int offset) {
+        return (scene.getWidth() - imageView.getBoundsInLocal().getWidth()) / 2 + offset;
     }
 
     @Override

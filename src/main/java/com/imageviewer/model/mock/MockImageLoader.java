@@ -5,11 +5,11 @@ import com.imageviewer.model.ImageLoader;
 
 public class MockImageLoader implements ImageLoader {
     private final String[] imagesUrl = {
-            "RED",
-            "GREEN",
-            "BLUE",
-            "YELLOW",
-            "ORANGE"
+            "/sample/maspalomas00.jpg",
+            "/sample/maspalomas01.jpg",
+            "/sample/maspalomas02.jpg",
+            "/sample/maspalomas03.jpg",
+            "/sample/maspalomas04.png",
     };
 
     @Override
