@@ -8,17 +8,28 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FXImageDisplay extends Pane implements ImageDisplay {
     private final Scene scene;
     private Released released;
     private Dragged dragged;
     private Changed changed;
+    private ChangedSize changedSize;
     private double startDragX;
+    private final List<Image> imageBuffer;
 
     public FXImageDisplay(Scene scene) {
         this.scene = scene;
+        this.setSizeChangeEventHandler();
         this.setMouseEventHandlers();
+        imageBuffer = new ArrayList<>();
+    }
+
+    private void setSizeChangeEventHandler() {
+        scene.widthProperty().addListener((observable, oldValue, newValue) -> changedSize.changedSize());
+        scene.heightProperty().addListener((observable, oldValue, newValue) -> changedSize.changedSize());
     }
 
     private void setMouseEventHandlers() {
@@ -41,12 +52,31 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
 
     @Override
     public void paint(String imageUrl, int offset) {
-        Image image = new Image(new File(imageUrl).toURI().toString());
+        Image image = contains(imageUrl) ? get(imageUrl) : add(imageUrl);
         ImageView imageView = new ImageView(image);
+        if (image == null) return;
         rescale(imageView, image);
         setLocation(imageView, offset);
         getChildren().add(imageView);
         if (offset == 0) changed.to(imageUrl);
+    }
+
+    private boolean contains(String imageUrl) {
+        return imageBuffer.stream().anyMatch(image -> image.getUrl().equals(new File(imageUrl).toURI().toString()));
+    }
+
+    private Image get(String imageUrl) {
+        for (Image image : imageBuffer) {
+            if (image.getUrl().equals(new File(imageUrl).toURI().toString())) return image;
+        }
+        return null;
+    }
+
+    private Image add(String imageUrl) {
+        if (imageBuffer.size() > 5) imageBuffer.remove(0);
+        Image image = new Image(new File(imageUrl).toURI().toString());
+        imageBuffer.add(image);
+        return image;
     }
 
     private void rescale(ImageView imageView, Image image) {
@@ -65,7 +95,6 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     }
 
     private double setX(ImageView imageView, int offset) {
-        System.out.println((scene.getWidth() - imageView.getBoundsInLocal().getWidth()) / 2 + offset);
         return (scene.getWidth() - imageView.getBoundsInLocal().getWidth()) / 2 + offset;
     }
 
@@ -82,5 +111,10 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     @Override
     public void on(Changed changed) {
         this.changed = changed;
+    }
+
+    @Override
+    public void on(ChangedSize changedSize) {
+        this.changedSize = changedSize;
     }
 }

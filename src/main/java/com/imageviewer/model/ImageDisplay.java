@@ -9,6 +9,8 @@ public interface ImageDisplay {
     void on(Released released);
     void on(Changed changed);
 
+    void on(ChangedSize changedSize);
+
     interface Dragged {
         void to(int offset);
     }
@@ -19,5 +21,9 @@ public interface ImageDisplay {
 
     interface Changed {
         void to(String image);
+    }
+
+    interface ChangedSize {
+        void changedSize();
     }
 }

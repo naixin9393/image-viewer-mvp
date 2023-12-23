@@ -19,7 +19,13 @@ public class ImagePresenter {
         this.imageDisplay.on((Dragged) this::dragged);
         this.imageDisplay.on((Released) this::released);
         this.imageDisplay.on(this::changed);
+        this.imageDisplay.on(this::changedSize);
         this.imageDisplay.paint(image.url(), 0);
+    }
+
+    private void changedSize() {
+        imageDisplay.clear();
+        imageDisplay.paint(image.url(), 0);
     }
 
     private void changed(String url) {
