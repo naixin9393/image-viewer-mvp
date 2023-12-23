@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-import java.util.Objects;
+import java.io.File;
 
 public class FXImageDisplay extends Pane implements ImageDisplay {
     private final Scene scene;
@@ -62,7 +62,7 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
 
     @Override
     public void paint(String imageUrl, int offset) {
-        Image image = new Image(Objects.requireNonNull(getClass().getResource(imageUrl)).toExternalForm());
+        Image image = new Image(new File(imageUrl).toURI().toString());
         ImageView imageView = new ImageView(image);
         rescale(imageView, image);
         setLocation(imageView, offset);
