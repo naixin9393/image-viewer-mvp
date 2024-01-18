@@ -1,5 +1,10 @@
 package com.imageviewer.model;
 
 public interface ImageChooser {
-    Image choose();
+    void choose();
+    void on(ChosenImage chosenImage);
+
+    interface ChosenImage {
+        void get(String image);
+    }
 }

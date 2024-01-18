@@ -15,7 +15,6 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     private final Scene scene;
     private Released released;
     private Dragged dragged;
-    private Changed changed;
     private ChangedSize changedSize;
     private double startDragX;
     private final List<Image> imageBuffer;
@@ -58,7 +57,6 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
         rescale(imageView, image);
         setLocation(imageView, offset);
         getChildren().add(imageView);
-        if (offset == 0) changed.to(imageUrl);
     }
 
     private boolean contains(String imageUrl) {
@@ -106,11 +104,6 @@ public class FXImageDisplay extends Pane implements ImageDisplay {
     @Override
     public void on(Released released) {
         this.released = released;
-    }
-
-    @Override
-    public void on(Changed changed) {
-        this.changed = changed;
     }
 
     @Override

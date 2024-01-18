@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class Main extends Application {
-
     private CommandManager commandManager;
 
     public static void main(String[] args) {
@@ -31,12 +30,12 @@ public class Main extends Application {
     private void onStageReady(FXImageViewer.StageEvent stageEvent) {
         ImageDisplay imageDisplay = stageEvent.getImageDisplay();
         ImageChooser imageChooser = stageEvent.getImageChooser();
-        commandManager.add("Open", new ChooseImageCommand(imageChooser, imageDisplay));
-        createPresenter(imageDisplay);
+        commandManager.add("Open", new ChooseImageCommand(imageChooser));
+        createPresenter(imageDisplay, imageChooser);
     }
 
-    private void createPresenter(ImageDisplay imageDisplay) {
+    private void createPresenter(ImageDisplay imageDisplay, ImageChooser imageChooser) {
         com.imageviewer.model.Image sampleImage = new FileImageLoader(new File("src/main/resources/sample")).load();
-        new ImagePresenter(sampleImage, imageDisplay);
+        new ImagePresenter(sampleImage, imageDisplay, imageChooser);
     }
 }
