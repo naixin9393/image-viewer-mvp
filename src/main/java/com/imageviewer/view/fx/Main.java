@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.URL;
+import java.util.Objects;
 
 public class Main extends Application {
     private CommandManager commandManager;
@@ -35,7 +37,23 @@ public class Main extends Application {
     }
 
     private void createPresenter(ImageDisplay imageDisplay, ImageChooser imageChooser) {
-        com.imageviewer.model.Image sampleImage = new FileImageLoader(new File("src/main/resources/sample")).load();
+        File sampleFile = getSampleFile();
+        com.imageviewer.model.Image sampleImage = null;
+        if (sampleFile != null) {
+            sampleImage = new FileImageLoader(sampleFile).load();
+        }
         new ImagePresenter(sampleImage, imageDisplay, imageChooser);
+    }
+
+    private File getSampleFile() {
+        try {
+            String sampleFileURL = System.getProperty("user.dir");
+            URL res = new URL(Objects.requireNonNull(getClass().getResource("/sample")).toString());
+            if (res.getProtocol().equals("jar"))
+                return new File(sampleFileURL + "/app/classes/sample");
+            return new File(sampleFileURL + "/src/main/resources/sample");
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

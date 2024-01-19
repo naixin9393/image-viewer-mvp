@@ -21,7 +21,8 @@ public class ImagePresenter {
         this.imageDisplay.on((Released) this::released);
         this.imageDisplay.on(this::changedSize);
         imageChooser.on(this::chooseImage);
-        this.imageDisplay.paint(image.url(), 0);
+        if (image != null)
+            this.imageDisplay.paint(image.url(), 0);
     }
 
     private void changedSize() {
